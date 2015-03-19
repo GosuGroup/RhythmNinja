@@ -1,8 +1,6 @@
-<html>
- <head>
-  <title>PHP Test</title>
- </head>
- <body>
- <?php echo '<p>Hello World</p>'; ?> 
- </body>
-</html>
+<?php
+$response = array('hi' => 'world');
+$encoded = json_encode($response);
+header('Content-type: application/json');
+exit($encoded);
+?>
