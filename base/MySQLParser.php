@@ -4,6 +4,17 @@ include("config.php");
 
 class MySQLParser {
 
+	public static function DecodeJsonFields(&$row) {
+		foreach ($row as $key => $value) {
+			$decodedJson = json_decode($value);
+			if (is_array($decodedJson)) {
+				error_log($decodedJson);
+				$row[$key] = $decodedJson;
+			}
+		}
+		return $row;
+	}
+
 	public static function ParseArray($tableName) {
 		$query = MySQLParser::TableQuery($tableName);
 		if (!isset($query)) {
@@ -12,6 +23,7 @@ class MySQLParser {
 
 		$result = array();
 		while ($row = $query->fetch_assoc()) {
+			self::DecodeJsonFields($row);
 			$result[] = $row; 
 		}
 
@@ -26,6 +38,7 @@ class MySQLParser {
 
 		$result = array();
 		while ($row = $query->fetch_assoc()) {
+			self::DecodeJsonFields($row);
 			if (isset($row[$primaryKey])) {
 				$result[$row[$primaryKey]] = $row;
 			}
