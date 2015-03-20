@@ -1,1 +1,1 @@
-Replace config.template with config.php and appropriate parameters.
+Run "sh download_config.sh" to download the necessary files to run locally from our s3 bucket
