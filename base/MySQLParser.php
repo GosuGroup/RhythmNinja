@@ -37,7 +37,7 @@ class MySQLParser {
 	}
 
 	public static function ParseConstants() {
-		$query = MySQLParser::TableQuery("Constant");
+		$query = MySQLParser::TableQuery("Constants");
 		if (!isset($query)) {
 			return null;
 		}
@@ -45,8 +45,8 @@ class MySQLParser {
 		$result = array();
 		while ($row = $query->fetch_assoc()) {
 			self::DecodeJsonFields($row);
-			$namespace = $row["namespace"];
-			$key = $row["key"];
+			$namespace = $row["type"];
+			$key = $row["name"];
 			$value = $row["value"];
 			$result[$namespace][$key] = $value;
 		}
@@ -67,9 +67,13 @@ class MySQLParser {
 
 	private static function DecodeJsonFields(&$row) {
 		foreach ($row as $key => $value) {
-			$decodedJson = json_decode($value);
-			if (is_array($decodedJson)) {
-				$row[$key] = $decodedJson;
+			if (is_numeric($value)) {
+				$row[$key] = (double)$value;
+			} else {
+				$decodedJson = json_decode($value);
+				if (is_array($decodedJson)) {
+					$row[$key] = $decodedJson;
+				}
 			}
 		}
 		return $row;
